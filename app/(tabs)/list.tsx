@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, ScrollView } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -52,12 +52,13 @@ export default function ListScreen() {
     [router]
   );
 
-  const typeCounts = useMemo(() => ({
-    total: facilities.length,
-    hospital_publico: facilities.filter(f => f.type === 'hospital_publico').length,
-    cesfam: facilities.filter(f => f.type === 'cesfam').length,
-    clinica_privada: facilities.filter(f => f.type === 'clinica_privada').length,
-  }), []);
+  const typeCounts = useMemo(() => {
+    const counts: Record<string, number> = { total: facilities.length };
+    facilities.forEach(f => {
+      counts[f.type] = (counts[f.type] || 0) + 1;
+    });
+    return counts;
+  }, []);
 
   const renderItem = useCallback(
     ({ item }: { item: Facility }) => (
@@ -100,26 +101,16 @@ export default function ListScreen() {
     () => (
       <View style={styles.listHeader}>
         {/* Stats Row */}
-        <View style={styles.statsRow}>
-          <View style={[styles.statCard, { backgroundColor: facilityTypeConfig.hospital_publico.lightColor }]}>
-            <Text style={[styles.statValue, { color: facilityTypeConfig.hospital_publico.color }]}>
-              {typeCounts.hospital_publico}
-            </Text>
-            <Text style={styles.statLabel}>H. Públicos</Text>
-          </View>
-          <View style={[styles.statCard, { backgroundColor: facilityTypeConfig.cesfam.lightColor }]}>
-            <Text style={[styles.statValue, { color: facilityTypeConfig.cesfam.color }]}>
-              {typeCounts.cesfam}
-            </Text>
-            <Text style={styles.statLabel}>CESFAM</Text>
-          </View>
-          <View style={[styles.statCard, { backgroundColor: facilityTypeConfig.clinica_privada.lightColor }]}>
-            <Text style={[styles.statValue, { color: facilityTypeConfig.clinica_privada.color }]}>
-              {typeCounts.clinica_privada}
-            </Text>
-            <Text style={styles.statLabel}>C. Privadas</Text>
-          </View>
-        </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.statsScroll}>
+          {Object.entries(facilityTypeConfig).map(([key, cfg]) => (
+            <View key={key} style={[styles.statCard, { backgroundColor: cfg.lightColor }]}>
+              <Text style={[styles.statValue, { color: cfg.color }]}>
+                {typeCounts[key] || 0}
+              </Text>
+              <Text style={styles.statLabel} numberOfLines={1}>{cfg.label}</Text>
+            </View>
+          ))}
+        </ScrollView>
 
         <Text style={styles.resultsCount}>
           {filteredFacilities.length} de {facilities.length} centros
@@ -231,16 +222,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 12,
   },
-  statsRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 12,
+  statsScroll: {
+    gap: 8,
+    paddingBottom: 12,
   },
   statCard: {
-    flex: 1,
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
     borderRadius: 12,
+    minWidth: 80,
   },
   statValue: {
     fontSize: 24,

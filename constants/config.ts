@@ -12,6 +12,11 @@ export const config = {
     { id: 'hospital_publico', label: 'H. Públicos' },
     { id: 'cesfam', label: 'CESFAM' },
     { id: 'clinica_privada', label: 'C. Privadas' },
+    { id: 'sapu', label: 'SAPU' },
+    { id: 'sar', label: 'SAR' },
+    { id: 'cosam', label: 'COSAM' },
+    { id: 'cecof', label: 'CECOF' },
+    { id: 'aseguradora', label: 'Seguros' },
     { id: 'favoritos', label: 'Favoritos' },
   ] as const,
 };
