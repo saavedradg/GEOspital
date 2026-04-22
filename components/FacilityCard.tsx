@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { theme } from '@/constants/theme';
+import { useTheme } from '@/hooks/useTheme';
 import { Facility, facilityTypeConfig } from '@/services/mockData';
 
 const renderStars = (rating: number) => {
   const full = Math.floor(rating);
   const half = rating - full >= 0.3;
-  const stars = [];
+  const stars: string[] = [];
   for (let i = 0; i < full; i++) stars.push('star');
   if (half) stars.push('star-half');
   while (stars.length < 5) stars.push('star-border');
@@ -21,6 +21,7 @@ interface FacilityCardProps {
 }
 
 export default function FacilityCard({ facility, onPress, isFavorite }: FacilityCardProps) {
+  const { colors, shadow } = useTheme();
   const typeConfig = facilityTypeConfig[facility.type];
 
   return (
@@ -28,7 +29,8 @@ export default function FacilityCard({ facility, onPress, isFavorite }: Facility
       onPress={onPress}
       style={({ pressed }) => [
         styles.card,
-        theme.shadow.small,
+        { backgroundColor: colors.surface },
+        shadow.small,
         pressed && { opacity: 0.9, transform: [{ scale: 0.99 }] },
       ]}
     >
@@ -41,28 +43,28 @@ export default function FacilityCard({ facility, onPress, isFavorite }: Facility
                 {typeConfig.label}
               </Text>
             </View>
-            {facility.urgencia && (
+            {facility.urgencia ? (
               <View style={styles.urgenciaBadge}>
                 <Text style={styles.urgenciaBadgeText}>Urgencia 24h</Text>
               </View>
-            )}
+            ) : null}
           </View>
-          {isFavorite && (
+          {isFavorite ? (
             <MaterialIcons name="star" size={18} color="#F59E0B" />
-          )}
+          ) : null}
         </View>
-        <Text style={styles.name} numberOfLines={1}>
+        <Text style={[styles.name, { color: colors.textPrimary }]} numberOfLines={1}>
           {facility.name}
         </Text>
         <View style={styles.infoRow}>
-          <MaterialIcons name="place" size={14} color={theme.textSecondary} />
-          <Text style={styles.infoText} numberOfLines={1}>
+          <MaterialIcons name="place" size={14} color={colors.textSecondary} />
+          <Text style={[styles.infoText, { color: colors.textSecondary }]} numberOfLines={1}>
             {facility.address}, {facility.comuna}
           </Text>
         </View>
         <View style={styles.infoRow}>
-          <MaterialIcons name="schedule" size={14} color={theme.textSecondary} />
-          <Text style={styles.infoText}>{facility.hours}</Text>
+          <MaterialIcons name="schedule" size={14} color={colors.textSecondary} />
+          <Text style={[styles.infoText, { color: colors.textSecondary }]}>{facility.hours}</Text>
         </View>
         <View style={styles.ratingRow}>
           <View style={styles.starsContainer}>
@@ -71,15 +73,17 @@ export default function FacilityCard({ facility, onPress, isFavorite }: Facility
             ))}
           </View>
           <Text style={styles.ratingText}>{facility.googleRating.toFixed(1)}</Text>
-          <Text style={styles.reviewsText}>({facility.googleReviews.toLocaleString()})</Text>
-          <View style={styles.attendancePill}>
-            <MaterialIcons name="people" size={11} color={theme.primary} />
-            <Text style={styles.attendanceText}>{facility.attendanceRate}</Text>
+          <Text style={[styles.reviewsText, { color: colors.textSecondary }]}>
+            ({facility.googleReviews.toLocaleString()})
+          </Text>
+          <View style={[styles.attendancePill, { backgroundColor: colors.background }]}>
+            <MaterialIcons name="people" size={11} color={colors.primary} />
+            <Text style={[styles.attendanceText, { color: colors.primary }]}>{facility.attendanceRate}</Text>
           </View>
         </View>
       </View>
       <View style={styles.chevronContainer}>
-        <MaterialIcons name="chevron-right" size={22} color={theme.textSecondary} />
+        <MaterialIcons name="chevron-right" size={22} color={colors.textSecondary} />
       </View>
     </Pressable>
   );
@@ -88,7 +92,6 @@ export default function FacilityCard({ facility, onPress, isFavorite }: Facility
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    backgroundColor: theme.surface,
     borderRadius: 12,
     overflow: 'hidden',
     marginHorizontal: 16,
@@ -137,7 +140,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 15,
     fontWeight: '700',
-    color: theme.textPrimary,
     marginBottom: 6,
   },
   infoRow: {
@@ -148,7 +150,6 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 13,
-    color: theme.textSecondary,
     flex: 1,
   },
   chevronContainer: {
@@ -172,13 +173,11 @@ const styles = StyleSheet.create({
   },
   reviewsText: {
     fontSize: 11,
-    color: theme.textSecondary,
   },
   attendancePill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: theme.background,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 6,
@@ -187,6 +186,5 @@ const styles = StyleSheet.create({
   attendanceText: {
     fontSize: 10,
     fontWeight: '600',
-    color: theme.primary,
   },
 });

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { theme } from '@/constants/theme';
+import { useTheme } from '@/hooks/useTheme';
 import { facilityTypeConfig, FacilityType } from '@/services/mockData';
 
 interface FilterOption {
@@ -16,11 +16,13 @@ interface FilterChipsProps {
 }
 
 export default function FilterChips({ options, activeFilter, onFilterChange }: FilterChipsProps) {
+  const { colors } = useTheme();
+
   const getChipColor = (id: string) => {
-    if (id === 'todos') return theme.primary;
+    if (id === 'todos') return colors.primary;
     if (id === 'favoritos') return '#F59E0B';
-    const config = facilityTypeConfig[id as FacilityType];
-    return config ? config.color : theme.primary;
+    const cfg = facilityTypeConfig[id as FacilityType];
+    return cfg ? cfg.color : colors.primary;
   };
 
   const handlePress = (id: string) => {
@@ -46,7 +48,7 @@ export default function FilterChips({ options, activeFilter, onFilterChange }: F
                 styles.chip,
                 isActive
                   ? { backgroundColor: chipColor }
-                  : { backgroundColor: theme.surface, borderColor: theme.border, borderWidth: 1 },
+                  : { backgroundColor: colors.surface, borderColor: colors.border, borderWidth: 1 },
               ]}
             >
               {option.id !== 'todos' && option.id !== 'favoritos' && (
@@ -57,15 +59,15 @@ export default function FilterChips({ options, activeFilter, onFilterChange }: F
                   ]}
                 />
               )}
-              {option.id === 'favoritos' && (
-                <Text style={{ fontSize: 12, marginRight: 4 }}>
-                  {isActive ? '★' : '☆'}
+              {option.id === 'favoritos' ? (
+                <Text style={{ fontSize: 12, marginRight: 4, color: isActive ? '#FFF' : '#F59E0B' }}>
+                  {isActive ? '\u2605' : '\u2606'}
                 </Text>
-              )}
+              ) : null}
               <Text
                 style={[
                   styles.chipText,
-                  { color: isActive ? '#FFFFFF' : theme.textPrimary },
+                  { color: isActive ? '#FFFFFF' : colors.textPrimary },
                 ]}
               >
                 {option.label}

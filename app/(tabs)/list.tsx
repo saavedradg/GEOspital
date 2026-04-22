@@ -6,9 +6,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import * as Haptics from 'expo-haptics';
-import { theme } from '@/constants/theme';
+import { useTheme } from '@/hooks/useTheme';
 import { config } from '@/constants/config';
-import { facilities, Facility, FacilityType, facilityTypeConfig } from '@/services/mockData';
+import { facilities, Facility, facilityTypeConfig } from '@/services/mockData';
 import { useApp } from '@/contexts/AppContext';
 import FilterChips from '@/components/FilterChips';
 import FacilityCard from '@/components/FacilityCard';
@@ -16,6 +16,7 @@ import FacilityCard from '@/components/FacilityCard';
 export default function ListScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { colors, shadow } = useTheme();
   const { favorites, isFavorite } = useApp();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,13 +24,11 @@ export default function ListScreen() {
 
   const filteredFacilities = useMemo(() => {
     let results = facilities;
-
     if (activeFilter === 'favoritos') {
       results = results.filter(f => isFavorite(f.id));
     } else if (activeFilter !== 'todos') {
       results = results.filter(f => f.type === activeFilter);
     }
-
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
       results = results.filter(
@@ -40,7 +39,6 @@ export default function ListScreen() {
           f.typeLabel.toLowerCase().includes(query)
       );
     }
-
     return results;
   }, [activeFilter, searchQuery, favorites, isFavorite]);
 
@@ -79,12 +77,12 @@ export default function ListScreen() {
           style={styles.emptyImage}
           contentFit="contain"
         />
-        <Text style={styles.emptyTitle}>Sin resultados</Text>
-        <Text style={styles.emptyDescription}>
+        <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>Sin resultados</Text>
+        <Text style={[styles.emptyDescription, { color: colors.textSecondary }]}>
           No se encontraron centros de salud con los filtros aplicados.
         </Text>
         <Pressable
-          style={styles.emptyButton}
+          style={[styles.emptyButton, { backgroundColor: colors.primary }]}
           onPress={() => {
             setSearchQuery('');
             setActiveFilter('todos');
@@ -94,68 +92,62 @@ export default function ListScreen() {
         </Pressable>
       </View>
     ),
-    []
+    [colors]
   );
 
   const renderHeader = useCallback(
     () => (
       <View style={styles.listHeader}>
-        {/* Stats Row */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.statsScroll}>
           {Object.entries(facilityTypeConfig).map(([key, cfg]) => (
             <View key={key} style={[styles.statCard, { backgroundColor: cfg.lightColor }]}>
               <Text style={[styles.statValue, { color: cfg.color }]}>
                 {typeCounts[key] || 0}
               </Text>
-              <Text style={styles.statLabel} numberOfLines={1}>{cfg.label}</Text>
+              <Text style={[styles.statLabel, { color: colors.textSecondary }]} numberOfLines={1}>{cfg.label}</Text>
             </View>
           ))}
         </ScrollView>
-
-        <Text style={styles.resultsCount}>
+        <Text style={[styles.resultsCount, { color: colors.textSecondary }]}>
           {filteredFacilities.length} de {facilities.length} centros
         </Text>
       </View>
     ),
-    [filteredFacilities.length, typeCounts]
+    [filteredFacilities.length, typeCounts, colors]
   );
 
   return (
-    <SafeAreaView edges={['top']} style={styles.container}>
-      {/* Header */}
+    <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>Centros de Salud</Text>
-        <Text style={styles.subtitle}>Santiago Metropolitano</Text>
+        <Text style={[styles.title, { color: colors.textPrimary }]}>Centros de Salud</Text>
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Santiago Metropolitano</Text>
       </View>
 
-      {/* Search Bar */}
       <View style={styles.searchContainer}>
-        <View style={[styles.searchBar, theme.shadow.small]}>
-          <MaterialIcons name="search" size={20} color={theme.textSecondary} />
+        <View style={[styles.searchBar, shadow.small, { backgroundColor: colors.surface }]}>
+          <MaterialIcons name="search" size={20} color={colors.textSecondary} />
           <TextInput
-            style={styles.searchInput}
+            style={[styles.searchInput, { color: colors.textPrimary }]}
             placeholder="Buscar por nombre, dirección o comuna..."
-            placeholderTextColor={theme.textSecondary}
+            placeholderTextColor={colors.textSecondary}
             value={searchQuery}
             onChangeText={setSearchQuery}
             returnKeyType="search"
           />
-          {searchQuery.length > 0 && (
+          {searchQuery.length > 0 ? (
             <Pressable onPress={() => setSearchQuery('')} hitSlop={10}>
-              <MaterialIcons name="close" size={20} color={theme.textSecondary} />
+              <MaterialIcons name="close" size={20} color={colors.textSecondary} />
             </Pressable>
-          )}
+          ) : null}
         </View>
       </View>
 
-      {/* Filter Chips */}
       <FilterChips
         options={config.filterOptions as any}
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
       />
 
-      {/* Facility List */}
       <View style={styles.listContainer}>
         <FlashList
           data={filteredFacilities}
@@ -163,10 +155,7 @@ export default function ListScreen() {
           ListHeaderComponent={renderHeader}
           ListEmptyComponent={renderEmpty}
           estimatedItemSize={110}
-          contentContainerStyle={{
-            paddingTop: 12,
-            paddingBottom: insets.bottom + 16,
-          }}
+          contentContainerStyle={{ paddingTop: 12, paddingBottom: insets.bottom + 16 }}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.id}
         />
@@ -176,110 +165,24 @@ export default function ListScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.background,
-  },
-  header: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 4,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: theme.textPrimary,
-  },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: theme.textSecondary,
-    marginTop: 2,
-  },
-  searchContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: theme.surface,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    height: 48,
-    gap: 10,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 15,
-    color: theme.textPrimary,
-  },
-  listContainer: {
-    flex: 1,
-    marginTop: 8,
-  },
-  listHeader: {
-    paddingHorizontal: 16,
-    marginBottom: 12,
-  },
-  statsScroll: {
-    gap: 8,
-    paddingBottom: 12,
-  },
-  statCard: {
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 12,
-    minWidth: 80,
-  },
-  statValue: {
-    fontSize: 24,
-    fontWeight: '700',
-  },
-  statLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: theme.textSecondary,
-    marginTop: 2,
-  },
-  resultsCount: {
-    fontSize: 13,
-    fontWeight: '500',
-    color: theme.textSecondary,
-  },
-  emptyContainer: {
-    alignItems: 'center',
-    paddingHorizontal: 40,
-    paddingTop: 40,
-  },
-  emptyImage: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
-  },
-  emptyTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: theme.textPrimary,
-    marginBottom: 8,
-  },
-  emptyDescription: {
-    fontSize: 14,
-    color: theme.textSecondary,
-    textAlign: 'center',
-    lineHeight: 20,
-    marginBottom: 20,
-  },
-  emptyButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    backgroundColor: theme.primary,
-    borderRadius: 9999,
-  },
-  emptyButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
+  container: { flex: 1 },
+  header: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 4 },
+  title: { fontSize: 28, fontWeight: '700' },
+  subtitle: { fontSize: 14, fontWeight: '500', marginTop: 2 },
+  searchContainer: { paddingHorizontal: 16, paddingVertical: 10 },
+  searchBar: { flexDirection: 'row', alignItems: 'center', borderRadius: 12, paddingHorizontal: 14, height: 48, gap: 10 },
+  searchInput: { flex: 1, fontSize: 15 },
+  listContainer: { flex: 1, marginTop: 8 },
+  listHeader: { paddingHorizontal: 16, marginBottom: 12 },
+  statsScroll: { gap: 8, paddingBottom: 12 },
+  statCard: { alignItems: 'center', paddingVertical: 10, paddingHorizontal: 14, borderRadius: 12, minWidth: 80 },
+  statValue: { fontSize: 24, fontWeight: '700' },
+  statLabel: { fontSize: 11, fontWeight: '600', marginTop: 2 },
+  resultsCount: { fontSize: 13, fontWeight: '500' },
+  emptyContainer: { alignItems: 'center', paddingHorizontal: 40, paddingTop: 40 },
+  emptyImage: { width: 120, height: 120, marginBottom: 20 },
+  emptyTitle: { fontSize: 18, fontWeight: '700', marginBottom: 8 },
+  emptyDescription: { fontSize: 14, textAlign: 'center', lineHeight: 20, marginBottom: 20 },
+  emptyButton: { paddingHorizontal: 24, paddingVertical: 10, borderRadius: 9999 },
+  emptyButtonText: { fontSize: 14, fontWeight: '600', color: '#FFFFFF' },
 });

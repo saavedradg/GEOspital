@@ -2,10 +2,11 @@ import { Tabs } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
-import { theme } from '@/constants/theme';
+import { useTheme } from '@/hooks/useTheme';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
 
   return (
     <Tabs
@@ -23,12 +24,12 @@ export default function TabLayout() {
             android: insets.bottom + 8,
             default: 8,
           }),
-          backgroundColor: theme.surface,
+          backgroundColor: colors.surface,
           borderTopWidth: 1,
-          borderTopColor: theme.border,
+          borderTopColor: colors.border,
         },
-        tabBarActiveTintColor: theme.primary,
-        tabBarInactiveTintColor: theme.textSecondary,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '600',
