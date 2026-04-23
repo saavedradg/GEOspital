@@ -1,6 +1,59 @@
-# Welcome to OnSpace AI
+#GEOspital
 
-Onspace AI empowers anyone to turn ideas into powerful AI applications in minutes—no coding required. Our free, no-code platform enables effortless creation of custom AI apps; simply describe your vision and our agentic AI handles the rest. The onspace-app, built with React Native and Expo, demonstrates this capability—integrating popular third-party libraries to deliver seamless cross-platform performance across iOS, Android, and Web environments.
+Localizador de centros asistenciales de Salud de Chile
+
+Fase 1 Región Metropolitana de Santiago (Capital)
+
+## V1.0 - Procesos realizados.
+
+Generated image
+Minimal line art illustration of a medical cross inside a circle with a magnifying glass overlapping, teal color #0D9488 on clean white background, healthcare search concept, professional flat design, subtle soft shadow, no text, centered composition, square format, ultra clean minimalist style
+All(12)
+Edited
+constants/theme.ts
+Edited
+constants/config.ts
+Edited
+services/mockData.ts
+Edited
+contexts/AppContext.tsx
+Edited
+app/_layout.tsx
+Edited
+app/(tabs)/_layout.tsx
+Edited
+components/FilterChips.tsx
+Edited
+components/FacilityCard.tsx
+Edited
+app/(tabs)/index.tsx
+Edited
+app/(tabs)/list.tsx
+Edited
+app/[id].tsx
+Qué se construyó:
+
+Mapa interactivo con 30 marcadores (10 hospitales públicos, 10 CESFAM, 10 clínicas privadas) con colores diferenciados por tipo
+Listado con búsqueda por nombre/dirección/comuna y filtros por tipo de establecimiento y favoritos
+Pantalla de detalle con información completa, servicios, botones de llamar y cómo llegar (abre Google Maps)
+Sistema de favoritos persistente con AsyncStorage y feedback háptico en todas las interacciones
+Próximos pasos:
+
+Agregar más establecimientos (SAR, SAPU, consultorios) para cobertura total del área metropolitana
+Implementar filtro por comuna y por disponibilidad de urgencia 24h
+Integrar geolocalización del usuario para mostrar distancias y centros más cercanos
+Thought for 1m 2s
+react-native-maps is native-only and breaks the web bundler. I'll split the map into platform-specific files using .native.tsx / .tsx extensions.
+
+Edited
+components/HealthMap.native.tsx
+All(3)
+Edited
+components/HealthMap.tsx
+Edited
+app/(tabs)/index.tsx
+Separé el mapa en componentes por plataforma — HealthMap.native.tsx usa react-native-maps para Android/iOS y HealthMap.tsx usa Leaflet/OpenStreetMap para la vista web. La compilación queda resuelta.
+
 
 ## Getting Started
 
