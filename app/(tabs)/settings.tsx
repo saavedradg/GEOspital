@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useTheme } from '@/hooks/useTheme';
+import { useResponsive } from '@/hooks/useResponsive';
 import { ThemeMode } from '@/contexts/ThemeContext';
 import { facilities, facilityTypeConfig } from '@/services/mockData';
 
@@ -15,6 +16,7 @@ const themeModes: { mode: ThemeMode; icon: string; label: string; description: s
 
 export default function SettingsScreen() {
   const { colors, shadow, mode, setMode, isDark } = useTheme();
+  const { maxWidth } = useResponsive();
 
   const totalFacilities = facilities.length;
   const typeCounts = Object.entries(facilityTypeConfig).map(([key, cfg]) => ({
@@ -26,7 +28,7 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, maxWidth ? { maxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         <View style={styles.header}>
           <Text style={[styles.title, { color: colors.textPrimary }]}>Configuración</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>GEOspital v1.0.0</Text>

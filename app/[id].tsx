@@ -13,6 +13,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useTheme } from '@/hooks/useTheme';
+import { useResponsive } from '@/hooks/useResponsive';
 import { facilities, facilityTypeConfig } from '@/services/mockData';
 import { useApp } from '@/contexts/AppContext';
 
@@ -22,6 +23,7 @@ export default function FacilityDetailScreen() {
   const insets = useSafeAreaInsets();
   const { colors, shadow } = useTheme();
   const { isFavorite, toggleFavorite } = useApp();
+  const { maxWidth, isDesktop } = useResponsive();
 
   const facility = facilities.find(f => f.id === id);
 
@@ -103,10 +105,13 @@ export default function FacilityDetailScreen() {
 
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}
+        contentContainerStyle={[
+          { paddingBottom: insets.bottom + 100 },
+          maxWidth ? { maxWidth, alignSelf: 'center', width: '100%' } : undefined,
+        ]}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.quickInfoRow}>
+        <View style={[styles.quickInfoRow, isDesktop ? { maxWidth: 500 } : undefined]}>
           <View style={[styles.quickInfoCard, shadow.small, { backgroundColor: colors.surface }]}>
             <MaterialIcons name="schedule" size={22} color={colors.primary} />
             <Text style={[styles.quickInfoLabel, { color: colors.textSecondary }]}>Horario</Text>
@@ -204,7 +209,7 @@ export default function FacilityDetailScreen() {
         </View>
       </ScrollView>
 
-      <View style={[styles.bottomActions, shadow.large, { backgroundColor: colors.surface, paddingBottom: insets.bottom + 16, borderTopColor: colors.border }]}>
+      <View style={[styles.bottomActions, shadow.large, { backgroundColor: colors.surface, paddingBottom: insets.bottom + 16, borderTopColor: colors.border }, maxWidth ? { maxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
         <Pressable style={[styles.actionButtonSecondary, { borderColor: typeConfig.color, backgroundColor: colors.surface }]} onPress={handleCall}>
           <MaterialIcons name="phone" size={20} color={typeConfig.color} />
           <Text style={[styles.actionButtonSecondaryText, { color: typeConfig.color }]}>Llamar</Text>

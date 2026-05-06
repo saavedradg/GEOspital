@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import * as Haptics from 'expo-haptics';
 import { useTheme } from '@/hooks/useTheme';
+import { useResponsive } from '@/hooks/useResponsive';
 import { config } from '@/constants/config';
 import { facilities, Facility, facilityTypeConfig } from '@/services/mockData';
 import { useApp } from '@/contexts/AppContext';
@@ -18,6 +19,7 @@ export default function ListScreen() {
   const insets = useSafeAreaInsets();
   const { colors, shadow } = useTheme();
   const { favorites, isFavorite } = useApp();
+  const { isDesktop, isTablet, maxWidth } = useResponsive();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<string>('todos');
@@ -118,6 +120,7 @@ export default function ListScreen() {
 
   return (
     <SafeAreaView edges={['top']} style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.innerContainer, maxWidth ? { maxWidth, alignSelf: 'center', width: '100%' } : undefined]}>
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.textPrimary }]}>Centros de Salud</Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Santiago Metropolitano</Text>
@@ -158,7 +161,9 @@ export default function ListScreen() {
           contentContainerStyle={{ paddingTop: 12, paddingBottom: insets.bottom + 16 }}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.id}
+          numColumns={isDesktop ? 2 : 1}
         />
+      </View>
       </View>
     </SafeAreaView>
   );
@@ -166,6 +171,7 @@ export default function ListScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  innerContainer: { flex: 1 },
   header: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 4 },
   title: { fontSize: 28, fontWeight: '700' },
   subtitle: { fontSize: 14, fontWeight: '500', marginTop: 2 },
