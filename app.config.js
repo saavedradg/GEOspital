@@ -1,7 +1,4 @@
-import { ExpoConfig, ConfigContext } from 'expo/config';
-
-export default ({ config }: ConfigContext): ExpoConfig => ({
-  ...config,
+module.exports = {
   name: 'GEOspital',
   slug: 'geospital',
   version: '1.0.0',
@@ -53,4 +50,4 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       projectId: 'geospital-android',
     },
   },
-});
+};
