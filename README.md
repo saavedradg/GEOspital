@@ -1,82 +1,135 @@
 # 🏥 GEOspital
 
-> Localizador de centros asistenciales de Salud de Chile | **Fase 1:** Región Metropolitana de Santiago (Capital)
+> Localizador de Centros de Salud — Región Metropolitana de Santiago, Chile
 
-[![License: Private](https://img.shields.io/badge/License-Private-red.svg)](https://github.com/saavedradg/GEOspital/blob/main/README.md)
 [![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android%20%7C%20Web-blue)](https://expo.dev)
-[![React Native](https://img.shields.io/badge/React%20Native-0.79.4-61DAFB?logo=react)](https://reactnative.dev/)
-[![Expo](https://img.shields.io/badge/Expo-53.0.9-000020?logo=expo)](https://expo.dev)
+[![React Native](https://img.shields.io/badge/React%20Native-0.79-61DAFB?logo=react)](https://reactnative.dev/)
+[![Expo](https://img.shields.io/badge/Expo-53-000020?logo=expo)](https://expo.dev)
 
-**GEOspital** es una aplicación multiplataforma que ayuda a los usuarios a encontrar y navegar hacia establecimientos de salud en Chile. Desarrollada con **Expo** y **React Native**, funciona sin problemas en iOS, Android y la web desde una misma base de código.
-
----
-
-## 📱 Capturas de pantalla
-
-| Mapa interactivo | Listado de centros | Detalle del centro |
-| :---: | :---: | :---: |
-| _(Inserta aquí una captura del mapa)_ | _(Inserta aquí una captura del listado)_ | _(Inserta aquí una captura de la vista de detalle)_ |
+**GEOspital** es una aplicación multiplataforma que permite localizar **195 centros de salud** en las **52 comunas** de la Región Metropolitana de Santiago. Funciona en iOS, Android y Web desde una misma base de código.
 
 ---
 
-## ✨ Características principales
+## ✨ Características
 
-### Funcionalidades actuales (v1.0)
-
--   **🗺️ Mapa interactivo**: Visualiza +30 establecimientos de salud de 3 tipos distintos (Hospitales Públicos, CESFAM y Clínicas Privadas), cada uno con un color y marcador único.
--   **🔍 Búsqueda y filtrado avanzado**: Encuentra centros por nombre, dirección o comuna, y aplíca filtros por tipo de establecimiento o tus favoritos.
--   **📱Vista de detalle completa**: Consulta información completa de cada centro: dirección, servicios, botón para llamar directamente e indicaciones para llegar (con integración a Google Maps).
--   **⭐ Sistema de favoritos persistente**: Guarda tus centros de salud preferidos con un solo toque, con almacenamiento local mediante `AsyncStorage` y retroalimentación háptica para una experiencia táctil satisfactoria.
-
-### Mapa en todas las plataformas
-
-GEOspital utiliza un sistema de mapa inteligente que se adapta a cada plataforma:
--   **📱 iOS & Android**: Utiliza `react-native-maps` para la máxima fluidez y rendimiento nativo.
--   **💻 Web**: Utiliza `Leaflet` con datos de `OpenStreetMap` para una visualización potente y sin fricciones en el navegador.
+- **🗺️ Mapa interactivo** con marcadores por tipo de establecimiento (10 categorías)
+- **🔍 Búsqueda y filtrado** por nombre, dirección, comuna o tipo
+- **📋 Listado completo** con tarjetas informativas y ratings de Google
+- **📱 Vista de detalle** con servicios, horarios, teléfono y navegación GPS
+- **⭐ Favoritos** persistentes con AsyncStorage
+- **🌓 Tema claro/oscuro/automático** con detección del sistema
+- **📐 Diseño responsivo** adaptado a móvil, tablet y desktop
+- **🗺️ Mapas multiplataforma**: react-native-maps (nativo) + Leaflet/OSM (web)
 
 ---
 
-## 🛠️ Tecnologías utilizadas
+## 🏗️ Tecnologías
 
--   **Framework Core**: [Expo](https://expo.dev) (~53.0.9) y [React Native](https://reactnative.dev) (0.79.3).
--   **Lenguaje**: [TypeScript](https://www.typescriptlang.org/) (~5.8.3) para un código robusto y tipado.
--   **Backend y datos**: [Supabase](https://supabase.com/) (^2.50.0) para la base de datos y autenticación.
--   **Navegación**: [Expo Router](https://docs.expo.dev/router/introduction/) (~5.0.7) para un sistema de rutas basado en archivos.
--   **Mapas**:
-    -   Móvil: `react-native-maps`.
-    -   Web: `Leaflet` / `OpenStreetMap`.
--   **UI y Estilos**:
-    -   `react-native-paper` para componentes Material Design.
-    -   `@expo/vector-icons` para iconografía escalable.
-    -   `expo-linear-gradient` y `expo-blur` para efectos visuales.
--   **Utilidades y servicios**:
-    -   `expo-location` para acceder a la ubicación del usuario.
-    -   `expo-haptics` para retroalimentación táctil.
-    -   `expo-camera` e `expo-image-picker` para funcionalidades multimedia.
-    -   `react-native-calendars` para manejo de fechas.
+| Categoría | Tecnología |
+|-----------|------------|
+| Framework | Expo ~53 + React Native |
+| Lenguaje | TypeScript |
+| Navegación | Expo Router (file-based) |
+| Mapas (móvil) | react-native-maps |
+| Mapas (web) | Leaflet + OpenStreetMap |
+| Estado | React Context + AsyncStorage |
+| UI | @expo/vector-icons, react-native-reanimated |
+| Haptics | expo-haptics |
 
 ---
 
-## 📋 Prerrequisitos
+## 📋 Requisitos
 
-Antes de comenzar, asegúrate de tener instalado lo siguiente:
-
--   **[Node.js](https://nodejs.org/)** (versión 18.x o superior).
--   **[Git](https://git-scm.com/)** para clonar el repositorio.
--   **Un editor de código**, como [Visual Studio Code](https://code.visualstudio.com/).
--   **Opcional, para desarrollo móvil:**
-    -   [Android Studio](https://developer.android.com/studio) para emular Android.
-    -   [Xcode](https://developer.apple.com/xcode/) (solo en macOS) para emular iOS.
+- **Node.js** >= 18.x
+- **npm** o **yarn**
 
 ---
 
-## 🚀 Cómo empezar
-
-Sigue estos pasos para poner en marcha el proyecto en tu máquina local.
-
-### 1. Clonar el repositorio
+## 🚀 Inicio rápido
 
 ```bash
-git clone https://github.com/saavedradg/GEOspital.git
-cd GEOspital
+# 1. Instalar dependencias
+npm install
 
+# 2. Iniciar en modo desarrollo (web)
+npx expo start --web
+
+# 3. Iniciar en modo desarrollo (móvil)
+npx expo start
+```
+
+---
+
+## 📦 Exportar para producción
+
+### Web (estática)
+```bash
+npx expo export --platform web
+```
+Genera una carpeta `dist/` lista para desplegar en cualquier hosting estático (Vercel, Netlify, GitHub Pages, etc.)
+
+### Android (APK)
+```bash
+npx eas build --platform android --profile production
+```
+
+### iOS (IPA)
+```bash
+npx eas build --platform ios --profile production
+```
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+app/                  # Páginas (Expo Router)
+├── (tabs)/           # Navegación por tabs (Mapa, Listado, Ajustes)
+├── [id].tsx          # Detalle de establecimiento
+├── welcome.tsx       # Landing page
+└── _layout.tsx       # Layout raíz
+
+components/           # Componentes reutilizables
+├── HealthMap.tsx     # Mapa web (Leaflet)
+├── HealthMap.native.tsx  # Mapa nativo (react-native-maps)
+├── FilterChips.tsx   # Chips de filtrado
+└── FacilityCard.tsx  # Tarjeta de establecimiento
+
+constants/            # Tokens de diseño y configuración
+contexts/             # Providers (Theme, App/Favorites)
+hooks/                # Hooks personalizados (useTheme, useResponsive)
+services/             # Datos (195 establecimientos verificados)
+assets/               # Imágenes y recursos estáticos
+```
+
+---
+
+## 🗂️ Tipos de establecimientos (195 total)
+
+| Tipo | Cantidad |
+|------|----------|
+| Hospitales Públicos | 26 |
+| Hospitales Universitarios | 8 |
+| Clínicas Privadas | 20 |
+| CESFAM | 35 |
+| SAPU | 24 |
+| SAR | 14 |
+| COSAM | 16 |
+| CECOF/CECOSF | 18 |
+| Aseguradoras | 12 |
+| Mutuales | 10 |
+
+---
+
+## 📄 Fuentes de datos
+
+- MINSAL (Ministerio de Salud de Chile)
+- Google Maps (direcciones y ratings)
+- Servicios de Salud Metropolitanos (SSMC, SSMN, SSMO, SSMS, SSMSO)
+- Sitios web oficiales de cada establecimiento
+
+---
+
+## 📝 Licencia
+
+Proyecto privado. Todos los derechos reservados.

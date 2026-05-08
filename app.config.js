@@ -47,7 +47,7 @@ module.exports = {
   },
   extra: {
     eas: {
-      projectId: 'geospital-android',
+      projectId: 'geospital',
     },
   },
 };
